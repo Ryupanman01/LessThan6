@@ -1,0 +1,13 @@
+MusMusさんのBGM
+MusMus-STLP-006->Game.mp3に名変更
+MusMus-JGL-010a->End.mp3に名変更
+MusMus-BGM-062->Title.mp3に名変更
+
+甘茶の音楽工房さんのBGM
+lovelyflower->Help.mp3に名変更
+
+
+se_pikon18.mp3->Put.mp3
+se_suitsuku01.mp3->Cursor.mp3
+
+カーソル移動7.mp3->Back.mp3
