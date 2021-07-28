@@ -5,38 +5,38 @@
 #include "Input.h"
 #include "Pause3.h"
 
-//”Õ–Ê‚Ì‘å‚«‚³
+//ç›¤é¢ã®å¤§ãã•
 #define Boardsize 10
 
-//ó‘Ô‚Ì’è‹`
+//çŠ¶æ…‹ã®å®šç¾©
 #define CLEAR -2
 #define NONE -1
 #define WHITE 0
 #define BLACK 1
 
-//F
+//è‰²
 #define Blackcolor GetColor(0,0,0)
 #define Whitecolor GetColor(255,255,255)
 #define Redcolor GetColor(230,0,0)
 #define Bluecolor GetColor(0,0,230)
 
-//‰æ‘œ
+//ç”»åƒ
 static int mImageBanmen;
 static int komaImage[2];
 static int ResultImage;
 
-//”Õ–Ê
+//ç›¤é¢
 static int Banmen[Boardsize][Boardsize];
 
-//ƒ^[ƒ“
+//ã‚¿ãƒ¼ãƒ³
 static int turn_flg;//BLACK;
 static int turn_count;
 
-//ƒRƒ}”
+//ã‚³ãƒæ•°
 static int b;
 static int w;
 
-//•ûŒüƒxƒNƒgƒ‹–¼
+//æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«å
 enum {
 	DIRECTION_UP,
 	DIRECTION_UP_LEFT,
@@ -49,7 +49,7 @@ enum {
 	DIRECTION_MAX
 };
 
-//•ûŒüƒxƒNƒgƒ‹
+//æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 static int directions[][2] = {
 	{0,-1},//DIRECTION_UP
 	{-1,-1},//DIRECTION_UP_LEFT
@@ -61,38 +61,38 @@ static int directions[][2] = {
 	{1,-1}//DIRECTION_UP_RIGHT
 };
 
-//ƒRƒ}‚ª’u‚¯‚é‚©‚ğ’²‚×‚éˆ—
+//ã‚³ãƒãŒç½®ã‘ã‚‹ã‹ã‚’èª¿ã¹ã‚‹å‡¦ç†
 static bool checkPut(int color, int i, int j, bool turnOver) {
 	if (Banmen[i][j] != NONE)
 		return false;
 
-	//ƒRƒ}‚Ì’u‚¯‚é•ûŒü‚ğ’²‚×‚éˆ—
+	//ã‚³ãƒã®ç½®ã‘ã‚‹æ–¹å‘ã‚’èª¿ã¹ã‚‹å‡¦ç†
 	for (int c = 0; c < DIRECTION_MAX; c++) {
 		int x = i, y = j;
 		y += directions[c][0];
 		x += directions[c][1];
 
-		//(1‚Ì‚Í0A0‚Ì‚Í1 ,‚Æ‚¢‚¤‰‰Z)
+		//(1ã®æ™‚ã¯0ã€0ã®æ™‚ã¯1 ,ã¨ã„ã†æ¼”ç®—)
 		if (Banmen[x][y] != (color ^ 1))
 			continue;
 		while (1) {
 			y += directions[c][0];
 			x += directions[c][1];
 
-			//‚à‚µ’²‚×‚é•ûŒü‚ª”Õ–Ê‚Ì˜g‚ğo‚½ê‡A’²‚×‚é‚Ì‚ğ‚â‚ß‚é
+			//ã‚‚ã—èª¿ã¹ã‚‹æ–¹å‘ãŒç›¤é¢ã®æ ã‚’å‡ºãŸå ´åˆã€èª¿ã¹ã‚‹ã®ã‚’ã‚„ã‚ã‚‹
 			if ((x < 0) || (x >= Boardsize) || (y < 0) || (y >= Boardsize)) {
 				break;
 			}
-			//‚à‚µ”Õ–Ê‚É‰½‚à‚È‚¢ƒ}ƒX‚ª‚ ‚ê‚Î’²‚×‚é‚Ì‚ğ‚â‚ß‚é
+			//ã‚‚ã—ç›¤é¢ã«ä½•ã‚‚ãªã„ãƒã‚¹ãŒã‚ã‚Œã°èª¿ã¹ã‚‹ã®ã‚’ã‚„ã‚ã‚‹
 			if (Banmen[x][y] == NONE) {
 				break;
 			}
-			//‚à‚µ”Õ–Ê‚É©•ª‚ÌF‚ª‚ ‚ê‚ÎA— •Ô‚·€”õ‚ª‚Å‚«‚é
+			//ã‚‚ã—ç›¤é¢ã«è‡ªåˆ†ã®è‰²ãŒã‚ã‚Œã°ã€è£è¿”ã™æº–å‚™ãŒã§ãã‚‹
 			if (Banmen[x][y] == color) {
 				if (!turnOver)
 					return true;
 
-				//ƒRƒ}‚ğ— •Ô‚·ˆ—
+				//ã‚³ãƒã‚’è£è¿”ã™å‡¦ç†
 				int x2 = i, y2 = j;
 				while (1) {
 					Banmen[x2][y2] = color;
@@ -110,7 +110,7 @@ static bool checkPut(int color, int i, int j, bool turnOver) {
 	return false;
 }
 
-//ƒpƒX”»’èAŒ‹‰Ê”»’è
+//ãƒ‘ã‚¹åˆ¤å®šã€çµæœåˆ¤å®š
 static bool checkPutAll(int color) {
 	for (int y = 0; y < Boardsize; y++) {
 		for (int x = 0; x < Boardsize; x++) {
@@ -121,9 +121,9 @@ static bool checkPutAll(int color) {
 	return false;
 }
 
-//‰Šú‰»
+//åˆæœŸåŒ–
 void Game3_Initialize() {
-	//‰æ‘œ
+	//ç”»åƒ
 	mImageBanmen = LoadGraph("images/banmen2.png");
 	ResultImage = LoadGraph("images/Result.png");
 	LoadDivGraph("images/koma1.png", 2, 2, 1, 48, 48, komaImage);
@@ -131,14 +131,14 @@ void Game3_Initialize() {
 	//BGM
 	PlayMusic("sounds/Game.mp3", DX_PLAYTYPE_LOOP);
 
-	//ƒ^[ƒ“ƒJƒEƒ“ƒg
+	//ã‚¿ãƒ¼ãƒ³ã‚«ã‚¦ãƒ³ãƒˆ
 	turn_count = 0;
 	turn_flg = BLACK;
 
-	//ƒ|[ƒY
+	//ãƒãƒ¼ã‚º
 	pause_flg = 0;
 
-	//”Õ–Ê‰Šú‰»
+	//ç›¤é¢åˆæœŸåŒ–
 	int i, j;
 	for (i = 0; i < Boardsize; i++) {
 		for (j = 0; j < Boardsize; j++) {
@@ -150,10 +150,10 @@ void Game3_Initialize() {
 	Banmen[4][4] = WHITE;
 	Banmen[5][5] = WHITE;
 
-	//ƒ}ƒX‚Æ—×Ú‚µ‚Ä‚È‚¢ƒ}ƒX‚ğƒRƒƒ“ƒgƒAƒEƒg‚µ‚Ä‚ ‚è‚Ü‚·
+	//ãƒã‚¹ã¨éš£æ¥ã—ã¦ãªã„ãƒã‚¹ã‚’ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã—ã¦ã‚ã‚Šã¾ã™
 
-	//‚¨‚¯‚È‚¢
-	//¶ã
+	//ãŠã‘ãªã„
+	//å·¦ä¸Š
 	//Banmen[0][0] = CLEAR;
 	//Banmen[1][0] = CLEAR;
 	Banmen[2][0] = CLEAR;
@@ -164,7 +164,7 @@ void Game3_Initialize() {
 	Banmen[0][2] = CLEAR;
 	Banmen[1][2] = CLEAR;
 	Banmen[0][3] = CLEAR;
-	//‰Eã
+	//å³ä¸Š
 	Banmen[6][0] = CLEAR;
 	Banmen[7][0] = CLEAR;
 	//Banmen[8][0] = CLEAR;
@@ -175,7 +175,7 @@ void Game3_Initialize() {
 	Banmen[8][2] = CLEAR;
 	Banmen[9][2] = CLEAR;
 	Banmen[9][3] = CLEAR;
-	//¶‰º
+	//å·¦ä¸‹
 	Banmen[0][6] = CLEAR;
 	Banmen[0][7] = CLEAR;
 	Banmen[1][7] = CLEAR;
@@ -186,7 +186,7 @@ void Game3_Initialize() {
 	//Banmen[1][9] = CLEAR;
 	Banmen[2][9] = CLEAR;
 	Banmen[3][9] = CLEAR;
-	//‰E‰º
+	//å³ä¸‹
 	Banmen[9][6] = CLEAR;
 	Banmen[8][7] = CLEAR;
 	Banmen[9][7] = CLEAR;
@@ -199,69 +199,69 @@ void Game3_Initialize() {
 	//Banmen[9][9] = CLEAR;
 
 
-	//ƒvƒŒƒCƒ„[
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 	Player1_Initialize();
-	//ƒ|[ƒY
+	//ãƒãƒ¼ã‚º
 	Pause3_Initialize();
 }
 
-//I—¹ˆ—
+//çµ‚äº†å‡¦ç†
 void Game3_Finalize() {
 	DeleteGraph(mImageBanmen);
 	DeleteGraph(ResultImage);
 
-	//BGM’†~
+	//BGMä¸­æ­¢
 	StopMusic();
 
-	//ƒvƒŒƒCƒ„[
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 	Player1_Finalize();
-	//ƒ|[ƒY
+	//ãƒãƒ¼ã‚º
 	Pause3_Finalize();
 }
 
-//XV
+//æ›´æ–°
 void Game3_Update() {
 	Player1_Update();
 	if (pause_flg == 1) {
 		Pause3_Update();
 	}else
-	if (((b + w) >= 60 || (!checkPutAll(BLACK) && !checkPutAll(WHITE))) && (iKeyFlg == PAD_INPUT_B || CheckHitKey(KEY_INPUT_ESCAPE) != 0)) { //EscƒL[‚ª‰Ÿ‚³‚ê‚Ä‚¢‚½‚ç
+	if (((b + w) >= 60 || (!checkPutAll(BLACK) && !checkPutAll(WHITE))) && (iKeyFlg == PAD_INPUT_B || CheckHitKey(KEY_INPUT_ESCAPE) != 0)) { //Escã‚­ãƒ¼ãŒæŠ¼ã•ã‚Œã¦ã„ãŸã‚‰
 		PlaySound("sounds/Back.mp3", DX_PLAYTYPE_BACK);
-		SceneMgr_ChangeScene(eScene_Title);								//ƒV[ƒ“‚ğƒƒjƒ…[‚É•ÏX
+		SceneMgr_ChangeScene(eScene_Title);								//ã‚·ãƒ¼ãƒ³ã‚’ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã«å¤‰æ›´
 	}
-	if (iKeyFlg == PAD_INPUT_9) {
+	if (iKeyFlg == PAD_INPUT_B || iKeyFlg == PAD_INPUT_9) {
 		pause_flg = (pause_flg ^ 1);
 	}
 }
 
-//•`‰æ
+//æç”»
 void Game3_Draw() {
-	//‰æ‘œ
+	//ç”»åƒ
 	DrawGraph(0, 0, mImageBanmen, FALSE);
 
-	//‹î”
+	//é§’æ•°
 	CheckKoma();
 
 	if ((b + w) < 60 && (checkPutAll(BLACK) || checkPutAll(WHITE))) {
-		//‚à‚µƒtƒ‰ƒO‚ª‚½‚Á‚Ä‚¢‚ê‚Îƒ|[ƒY‰æ–Ê•`‰æ
+		//ã‚‚ã—ãƒ•ãƒ©ã‚°ãŒãŸã£ã¦ã„ã‚Œã°ãƒãƒ¼ã‚ºç”»é¢æç”»
 		if (pause_flg == 1) {
 			Pause3_Draw();
 		}
 		else {
-			//ƒtƒ‰ƒO‚ªŒo‚Á‚Ä‚¢‚È‚¯‚ê‚ÎƒQ[ƒ€‰æ–Ê•`‰æ
-			Player1_Draw();	//ƒvƒŒƒCƒ„[
-			Put();			//‹î‚ğ’u‚­
-			KomaDraw();		//‹î•`‰æ
-			Turn();			//ƒ^[ƒ“
+			//ãƒ•ãƒ©ã‚°ãŒçµŒã£ã¦ã„ãªã‘ã‚Œã°ã‚²ãƒ¼ãƒ ç”»é¢æç”»
+			Player1_Draw();	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+			Put();			//é§’ã‚’ç½®ã
+			KomaDraw();		//é§’æç”»
+			Turn();			//ã‚¿ãƒ¼ãƒ³
 		}
 	}
 	else if ((b + w) >= 60 || !checkPutAll(BLACK) && !checkPutAll(WHITE)) {
-		checkWinner();	//ƒŠƒUƒ‹ƒg
+		checkWinner();	//ãƒªã‚¶ãƒ«ãƒˆ
 	}
 }
 
 
-//‹î‚Ì•\¦
+//é§’ã®è¡¨ç¤º
 void KomaDraw() {
 	int i, j;
 	for (i = 0; i < Boardsize; ++i) {
@@ -282,9 +282,9 @@ void KomaDraw() {
 	}
 }
 
-//w’è‚µ‚½ˆÊ’u‚É‹î‚ğ•`‰æ
+//æŒ‡å®šã—ãŸä½ç½®ã«é§’ã‚’æç”»
 void Put() {
-	//’u‚¯‚È‚¢‚Æ‚±‚ë‚É’u‚­‚±‚Æ‚ª‚Å‚«‚È‚¢
+	//ç½®ã‘ãªã„ã¨ã“ã‚ã«ç½®ãã“ã¨ãŒã§ããªã„
 	if (!checkPut(turn_flg, mPlayer.cursorx, mPlayer.cursory, false)) {
 		return;
 	}
@@ -293,9 +293,9 @@ void Put() {
 		checkPut(turn_flg, mPlayer.cursorx, mPlayer.cursory, true);
 		Banmen[mPlayer.cursorx][mPlayer.cursory] = BLACK;
 		turn_count += 1;
-		turn_flg = WHITE;	//ƒ^[ƒ“‚ğ”’‚É‚·‚é
-		if (!checkPutAll(WHITE))	//‚à‚µ”’‹î‚Å’u‚­êŠ‚ª‚È‚¢‚Æ‚«
-			turn_flg = BLACK;	//ƒ^[ƒ“‚ğ•‚É‚·‚é
+		turn_flg = WHITE;	//ã‚¿ãƒ¼ãƒ³ã‚’ç™½ã«ã™ã‚‹
+		if (!checkPutAll(WHITE))	//ã‚‚ã—ç™½é§’ã§ç½®ãå ´æ‰€ãŒãªã„ã¨ã
+			turn_flg = BLACK;	//ã‚¿ãƒ¼ãƒ³ã‚’é»’ã«ã™ã‚‹
 
 	}
 	else if (turn_flg == WHITE && (iKeyFlg & PAD_INPUT_10 || iKeyFlg & PAD_INPUT_A)) {
@@ -303,14 +303,14 @@ void Put() {
 		checkPut(turn_flg, mPlayer.cursorx, mPlayer.cursory, true);
 		Banmen[mPlayer.cursorx][mPlayer.cursory] = WHITE;
 		turn_count += 1;
-		turn_flg = BLACK;	//ƒ^[ƒ“‚ğ•‚É‚·‚é
-		if (!checkPutAll(BLACK))	//‚à‚µ•‹î‚Å’u‚­êŠ‚ª‚È‚¢‚Æ‚«
-			turn_flg = WHITE;	//ƒ^[ƒ“‚ğ”’‚É‚·‚é
+		turn_flg = BLACK;	//ã‚¿ãƒ¼ãƒ³ã‚’é»’ã«ã™ã‚‹
+		if (!checkPutAll(BLACK))	//ã‚‚ã—é»’é§’ã§ç½®ãå ´æ‰€ãŒãªã„ã¨ã
+			turn_flg = WHITE;	//ã‚¿ãƒ¼ãƒ³ã‚’ç™½ã«ã™ã‚‹
 
 	}
 }
 
-//‹î”
+//é§’æ•°
 void CheckKoma() {
 	int i, j;
 	b = 0;
@@ -331,34 +331,34 @@ void CheckKoma() {
 	}
 }
 
-//ŸÒ”»’è
+//å‹è€…åˆ¤å®š
 void checkWinner() {
 
-	CheckKoma();	//‹î‚Ì”‚ğ”‚¦‚é
+	CheckKoma();	//é§’ã®æ•°ã‚’æ•°ãˆã‚‹
 
-	//Result‰æ–Ê•\¦
+	//Resultç”»é¢è¡¨ç¤º
 	DrawGraph(100, 50, ResultImage, TRUE);
 	SetFontSize(30);
-	DrawFormatString(170, 230, Blackcolor, "œ : %dŒÂ", b);
-	DrawFormatString(170, 270, Whitecolor, "œ : %dŒÂ", w);
+	DrawFormatString(170, 230, Blackcolor, "â— : %då€‹", b);
+	DrawFormatString(170, 270, Whitecolor, "â— : %då€‹", w);
 
-	//ŸÒ‚ğ•\¦
+	//å‹è€…ã‚’è¡¨ç¤º
 	SetFontSize(25);
 	if (b < w)
-		DrawString(175, 160, "œWinner!", Blackcolor);
+		DrawString(175, 160, "â—Winner!", Blackcolor);
 	else if (b > w)
-		DrawString(175, 160, "œWinner!", Whitecolor);
+		DrawString(175, 160, "â—Winner!", Whitecolor);
 	else
-		DrawString(190, 160, "`Draw`", Redcolor);
+		DrawString(190, 160, "ï½Drawï½", Redcolor);
 }
 
 void Turn() {
-	//ƒ^[ƒ“•\¦
+	//ã‚¿ãƒ¼ãƒ³è¡¨ç¤º
 	SetFontSize(15);
 	if (turn_flg == BLACK) {
-		DrawString(180, 232, "œPlayerƒ^[ƒ“", Blackcolor);
+		DrawString(180, 232, "â—Playerã‚¿ãƒ¼ãƒ³", Blackcolor);
 	}
 	else if (turn_flg == WHITE) {
-		DrawString(180, 232, "œPlayerƒ^[ƒ“", Whitecolor);
+		DrawString(180, 232, "â—Playerã‚¿ãƒ¼ãƒ³", Whitecolor);
 	}
 }
